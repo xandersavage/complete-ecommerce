@@ -352,7 +352,7 @@ const PaystackPaymentButton = ({
     onSuccess: onPaymentCompleted,
   }
 
-  console.log(paystackProps)
+  // console.log(paystackProps)
 
   if (notReady || !cart?.total) return null
 

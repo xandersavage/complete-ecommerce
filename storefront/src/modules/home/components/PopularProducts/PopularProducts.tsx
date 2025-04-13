@@ -20,6 +20,7 @@ const PopularProducts = () => {
       <div className="mt-16 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 sm:gap-4 gap-14">
         {products.map((product) => (
           <motion.div
+            key={product.name}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             // animate={{ x: 100 }}
@@ -28,7 +29,7 @@ const PopularProducts = () => {
             whileInView={{ opacity: 1, y: 0, transition: { duration: 1.5 } }}
             viewport={{ once: true }}
           >
-            <PopularProductCard key={product.name} {...product} />
+            <PopularProductCard {...product} />
           </motion.div>
         ))}
       </div>

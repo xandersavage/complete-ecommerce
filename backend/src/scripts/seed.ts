@@ -77,7 +77,7 @@ export default async function seedDemoData({ container }: ExecArgs) {
           name: "Nigeria", // Changed from "Europe" to "Nigeria"
           currency_code: "ngn", // Nigerian Naira currency code
           countries, // Now only contains "ng" (Nigeria)
-          payment_providers: ["pp_system_default"],
+          payment_providers: ["pp_system_default", "pp_paystack"],
         },
       ],
     },
@@ -100,11 +100,11 @@ export default async function seedDemoData({ container }: ExecArgs) {
     input: {
       locations: [
         {
-          name: "European Warehouse",
+          name: "Nigerian Warehouse",
           address: {
-            city: "Copenhagen",
-            country_code: "DK",
-            address_1: "",
+            city: "Asaba",
+            country_code: "NG",
+            address_1: "123 Main St",
           },
         },
       ],

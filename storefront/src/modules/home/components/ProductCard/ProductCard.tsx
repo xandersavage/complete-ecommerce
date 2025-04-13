@@ -32,7 +32,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, region }) => {
   const [isFavorite, setIsFavorite] = useState(false)
 
   // Get the first price from the first variant
-  const price = product.variants[0].calculated_price.calculated_amount
+  const price =
+    product.variants[0]?.calculated_price?.calculated_amount ||
+    product.variants[0]?.prices?.[0]?.amount ||
+    0
   // product.variants[0]?.prices?.find(
   //   (p) => p.currency_code === region.currency_code
   // )?.amount || 0
