@@ -58,7 +58,7 @@
   input[type="search"]::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
-/* NIKE STYLES */
+  /* NIKE STYLES */
   .padding {
     @apply sm:px-16 px-8 sm:py-24 py-12;
   }
@@ -181,4 +181,15 @@
   .hero-content {
     @apply relative z-10 h-full flex flex-col justify-center items-center text-center px-4;
   }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

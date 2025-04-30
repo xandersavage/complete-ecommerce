@@ -28,16 +28,32 @@ export const getProductByHandle = cache(async function (
   handle: string,
   regionId: string
 ) {
-  return sdk.store.product
-    .list(
+  try {
+    // Create a base parameters object with proper string conversion
+    const baseParams: Record<string, string> = {
+      handle,
+      region_id: regionId,
+      fields:
+        "*variants.calculated_price,+variants.inventory_quantity,+variants.manage_inventory,+variants.allow_backorder",
+    }
+
+    // Create URLSearchParams from the properly formatted object
+    const params = new URLSearchParams(baseParams)
+
+    const response = await sdk.client.fetch(
+      `/store/products?${params.toString()}`,
       {
-        handle,
-        region_id: regionId,
-        fields: "*variants.calculated_price,+variants.inventory_quantity",
-      },
-      { next: { tags: ["products"] } }
+        next: { tags: ["products"] },
+        cache: "no-store", // Disable caching for this request
+      }
     )
-    .then(({ products }) => products[0])
+
+    const { products } = response as { products: HttpTypes.StoreProduct[] }
+    return products[0]
+  } catch (error) {
+    console.error("Error fetching product:", error)
+    return null
+  }
 })
 
 export const getProductsList = cache(async function ({
@@ -142,7 +158,7 @@ export const getProductsList = cache(async function ({
 //   }
 // })
 export const getProductsListWithSort = cache(async function ({
-  page = 0,
+  page = 1, // Default to page 1
   queryParams,
   sortBy = "created_at",
   countryCode,
@@ -157,7 +173,9 @@ export const getProductsListWithSort = cache(async function ({
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
 }> {
   const limit = queryParams?.limit || 12
-  const pageParam = (page - 1) * limit
+
+  // offset based on page number
+  const offset = (page - 1) * limit
 
   const region = await getRegion(countryCode)
   if (!region) {
@@ -168,10 +186,10 @@ export const getProductsListWithSort = cache(async function ({
   }
 
   try {
-    // Create a base parameters object with proper string conversion
+    // base parameters object with proper string conversion
     const baseParams: Record<string, string> = {
-      limit: "100",
-      offset: "0",
+      limit: String(limit),
+      offset: String(offset), // Use calculated offset here
       region_id: region.id,
       fields: "*variants.calculated_price,+variants.inventory_quantity",
     }
@@ -179,11 +197,16 @@ export const getProductsListWithSort = cache(async function ({
     // Safely merge queryParams by converting values to strings and filtering out undefined
     if (queryParams) {
       Object.entries(queryParams).forEach(([key, value]) => {
-        if (value !== undefined) {
+        if (value !== undefined && key !== "limit" && key !== "offset") {
+          // Skip limit and offset from queryParams
           baseParams[key] = String(value)
         }
       })
     }
+
+    console.log(
+      `Fetching products with offset: ${offset}, limit: ${limit}, page: ${page}`
+    )
 
     // Create URLSearchParams from the properly formatted object
     const params = new URLSearchParams(baseParams)
@@ -200,13 +223,17 @@ export const getProductsListWithSort = cache(async function ({
       count: number
     }
 
+    console.log(`Received ${products.length} products of total ${count}`)
+
+    // Sort the products
     const sortedProducts = sortProducts(products, sortBy)
-    const paginatedProducts = sortedProducts.slice(pageParam, pageParam + limit)
-    const nextPage = count > pageParam + limit ? pageParam + limit : null
+
+    // Calculate if there's a next page
+    const nextPage = count > offset + limit ? page + 1 : null
 
     return {
       response: {
-        products: paginatedProducts || [],
+        products: sortedProducts || [],
         count,
       },
       nextPage,

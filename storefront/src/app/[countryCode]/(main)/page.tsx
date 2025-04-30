@@ -1,17 +1,13 @@
 import { Metadata } from "next"
 
-import CustomerReviews from "@modules/home/components/CustomerReviews/CustomerReviews"
+import CategoryNavigation from "@modules/home/components/CategoryNavigation/CategoryNavigation"
 import Hero from "@modules/home/components/Hero/Hero"
-import PopularProducts from "@modules/home/components/PopularProducts/PopularProducts"
-import Services from "@modules/home/components/Services/Services"
-import SpecialOffer from "@modules/home/components/SpecialOffer/SpecialOffer"
-import Subscribe from "@modules/home/components/Subscribe/Subscribe"
-import SuperQuality from "@modules/home/components/SuperQuality/SuperQuality"
-import FeaturedProducts from "@modules/home/components/featured-products"
 import { getCollectionsWithProducts } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 import LatestProductsCarousel from "@modules/home/components/LatestProductsCarousel/LatestProductsCarousel"
-
+import ValueProposition from "@modules/home/components/ValueProposition/ValueProposition"
+import Testimonials from "@modules/home/components/testimonials/Testimonials"
+import Newsletter from "@modules/home/components/Newsletter/Newsletter"
 export const metadata: Metadata = {
   title: "Pawklan",
   description: "Wear the brave",
@@ -34,32 +30,28 @@ export default async function Home({
 
   return (
     <>
-      <section className="xl:padding-l wide:padding-r padding-b">
+      <section className="">
         <Hero />
       </section>
 
-      {/* Add Featured Products Section */}
       <section className="padding">
+        <CategoryNavigation />
+      </section>
+
+      <section className="">
         <LatestProductsCarousel region={region} />
       </section>
 
       <section className="padding">
-        <PopularProducts />
+        <ValueProposition />
       </section>
+
       <section className="padding">
-        <SuperQuality />
+        <Testimonials />
       </section>
-      <section className="padding-x py-10">
-        <Services />
-      </section>
+
       <section className="padding">
-        <SpecialOffer />
-      </section>
-      <section className="padding bg-pale-blue">
-        <CustomerReviews />
-      </section>
-      <section className="padding-x sm:py-32 py-16 w-full">
-        <Subscribe />
+        <Newsletter />
       </section>
     </>
   )

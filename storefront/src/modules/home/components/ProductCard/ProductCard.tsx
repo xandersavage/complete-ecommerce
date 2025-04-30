@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
+import { Heart, ShoppingBag } from "lucide-react"
 
 interface ProductCardProps {
   product: {
@@ -21,6 +22,7 @@ interface ProductCardProps {
       }[]
     }[]
     handle: string
+    isNew?: boolean // Optional prop for new items
   }
   region: {
     currency_code: string
@@ -36,120 +38,103 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, region }) => {
     product.variants[0]?.calculated_price?.calculated_amount ||
     product.variants[0]?.prices?.[0]?.amount ||
     0
-  // product.variants[0]?.prices?.find(
-  //   (p) => p.currency_code === region.currency_code
-  // )?.amount || 0
-
-  //product[0].variants[0].calculated_price.calculated_amount
 
   // Format price with currency
   const formattedPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: region.currency_code.toUpperCase(),
-  }).format(price) // Assuming price is in cents
-
-  // Heart SVG Icon
-  const HeartIcon = () => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      className={`w-6 h-6 transition-colors duration-300 ${
-        isFavorite
-          ? "fill-red-500 text-red-500"
-          : "fill-none stroke-current text-gray-600 hover:text-red-500"
-      }`}
-      strokeWidth="2"
-      stroke="currentColor"
-    >
-      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-    </svg>
-  )
-
-  // Shopping Cart SVG Icon
-  const CartIcon = () => (
-    <svg
-      className="w-6 h-6 text-slate-700 group-hover:text-slate-900 transition-colors"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-      />
-    </svg>
-  )
+  }).format(price)
 
   return (
     <div
-      className="group relative w-full max-w-[300px] bg-white shadow-lg rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl"
+      className="group relative w-full bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Product Image */}
+      {/* Product Image with Link */}
       <Link href={`/products/${product.handle}`} className="block relative">
         <div className="relative w-full aspect-square overflow-hidden">
-          {product.thumbnail && (
+          {product.thumbnail ? (
             <Image
               src={product.thumbnail}
               alt={product.title}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out"
+              className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
               priority
             />
+          ) : (
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+              No image
+            </div>
           )}
+
+          {/* New Tag */}
+          {product.isNew && (
+            <div className="absolute top-3 left-3 bg-purple-600 text-white text-xs font-medium px-2 py-1 rounded-full z-10">
+              NEW
+            </div>
+          )}
+
+          {/* Favorite Button */}
+          <button
+            onClick={(e) => {
+              e.preventDefault() // Prevent link navigation
+              setIsFavorite(!isFavorite)
+            }}
+            className="absolute top-3 right-3 z-10 bg-white/80 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-colors"
+            aria-label={
+              isFavorite ? "Remove from favorites" : "Add to favorites"
+            }
+          >
+            <Heart
+              className={`w-5 h-5 transition-colors ${
+                isFavorite
+                  ? "fill-purple-600 text-purple-600"
+                  : "text-slate-700"
+              }`}
+            />
+          </button>
         </div>
       </Link>
 
-      {/* Favorite Button */}
-      <button
-        onClick={() => setIsFavorite(!isFavorite)}
-        className="absolute top-4 right-4 z-10 bg-white/70 p-2 rounded-full hover:bg-white transition-colors"
-        aria-label="Toggle Favorite"
-      >
-        <HeartIcon />
-      </button>
-
       {/* Product Details */}
       <div className="p-4">
-        <Link href={`/products/${product.handle}`}>
-          <h3 className="text-lg font-semibold text-gray-800 truncate mb-2">
+        <Link href={`/products/${product.handle}`} className="block">
+          <h3 className="font-palanquin font-bold text-lg text-slate-800 line-clamp-1 mb-1 group-hover:text-purple-600 transition-colors">
             {product.title}
           </h3>
+
+          {product.description && (
+            <p className="text-slate-500 text-sm line-clamp-2 mb-3 font-montserrat">
+              {product.description}
+            </p>
+          )}
         </Link>
 
-        <div className="flex justify-between items-center">
-          <span className="text-xl font-bold text-coral-red">
+        <div className="flex justify-between items-center mt-2">
+          <span className="text-lg font-bold text-purple-600 font-montserrat">
             {formattedPrice}
           </span>
 
-          {/* Quick Add to Cart */}
+          {/* Quick Add to Cart Button */}
           <button
-            className={`
-              transition-all duration-300 
-              ${
-                isHovered
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-2"
-              }
-              bg-coral-red text-white p-2 rounded-full 
-              hover:bg-coral-red/90 
-              flex items-center justify-center
-            `}
+            className="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
             aria-label="Add to Cart"
           >
-            <CartIcon />
+            <ShoppingBag className="w-5 h-5" />
           </button>
         </div>
       </div>
 
-      {/* Hover Overlay (Optional) */}
-      {isHovered && (
-        <div className="absolute inset-0 bg-black/10 transition-all duration-300 pointer-events-none"></div>
-      )}
+      {/* Quick View Overlay on Hover */}
+      <div
+        className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-purple-600/90 to-purple-600/0 text-white text-center py-3 transition-all duration-300 ${
+          isHovered ? "h-12 opacity-100" : "h-0 opacity-0"
+        }`}
+      >
+        <span className="font-medium">Quick View</span>
+      </div>
     </div>
   )
 }

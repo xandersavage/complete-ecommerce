@@ -49,6 +49,21 @@ const nextConfig = {
         protocol: "https",
         hostname: "medusa-server-testing.s3.us-east-1.amazonaws.com",
       },
+      {
+        // Allow images from Unsplash
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        // Allow images from Random User API
+        protocol: "https",
+        hostname: "randomuser.me",
+      },
+      {
+        // Allow images from LoremFlickr for dummy products
+        protocol: "https",
+        hostname: "loremflickr.com",
+      },
       ...(process.env.NEXT_PUBLIC_MINIO_ENDPOINT
         ? [
             {
