@@ -1,6 +1,6 @@
 # 🛍️ **E-commerce Store**
 
-    Hey there!,this is a full-featured e-commerce platform specializing in children's clothing and accessories. This project demonstrates a modern approach to e-commerce, built with performance, scalability, and user experience in mind.
+Hey there!,this is a full-featured e-commerce platform specializing in children's clothing and accessories. This project demonstrates a modern approach to e-commerce, built with performance, scalability, and user experience in mind.
 
 ## 📱 Key Features
 
