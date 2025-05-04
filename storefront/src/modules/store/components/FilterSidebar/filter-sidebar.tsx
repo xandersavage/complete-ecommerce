@@ -11,67 +11,23 @@ type FilterSidebarProps = {
 // Filter categories
 const filterGroups = [
   {
-    id: "categories",
-    name: "Categories",
-    options: [
-      { value: "tops", label: "Tops & T-shirts" },
-      { value: "bottoms", label: "Bottoms" },
-      { value: "dresses", label: "Dresses & Jumpsuits" },
-      { value: "outerwear", label: "Outerwear" },
-      { value: "activewear", label: "Activewear" },
-      { value: "swimwear", label: "Swimwear" },
-      { value: "sleepwear", label: "Sleepwear" },
-      { value: "accessories", label: "Accessories" },
-      { value: "shoes", label: "Shoes" },
-    ],
-  },
-  {
-    id: "ages",
-    name: "Age Range",
-    options: [
-      { value: "0-24m", label: "Babies (0-24 months)" },
-      { value: "2-4y", label: "Toddlers (2-4 years)" },
-      { value: "5-8y", label: "Kids (5-8 years)" },
-      { value: "9-12y", label: "Pre-Teens (9-12 years)" },
-      { value: "13+", label: "Teens (13+ years)" },
-    ],
-  },
-  {
     id: "colors",
     name: "Colors",
     options: [
       { value: "black", label: "Black", color: "#000000" },
       { value: "white", label: "White", color: "#FFFFFF" },
       { value: "gray", label: "Gray", color: "#808080" },
-      { value: "red", label: "Red", color: "#FF0000" },
       { value: "blue", label: "Blue", color: "#0000FF" },
-      { value: "green", label: "Green", color: "#008000" },
-      { value: "yellow", label: "Yellow", color: "#FFFF00" },
-      { value: "purple", label: "Purple", color: "#800080" },
-      { value: "pink", label: "Pink", color: "#FFC0CB" },
-      { value: "orange", label: "Orange", color: "#FFA500" },
+      { value: "red", label: "Red", color: "#FF0000" },
     ],
   },
   {
     id: "priceRange",
     name: "Price Range",
     options: [
-      { value: "0-25", label: "Under $25" },
-      { value: "25-50", label: "$ 25 - $ 50" },
+      { value: "0-50", label: "Under $50" },
       { value: "50-100", label: "$ 50 - $ 100" },
-      { value: "100-200", label: "$ 100 - $ 200" },
-      { value: "200-1000", label: "$ 200 +" },
-    ],
-  },
-  {
-    id: "tags",
-    name: "Features",
-    options: [
-      { value: "new-arrival", label: "New Arrivals" },
-      { value: "sale", label: "On Sale" },
-      { value: "sustainable", label: "Sustainable" },
-      { value: "organic", label: "Organic" },
-      { value: "best-seller", label: "Best Seller" },
+      { value: "100+", label: "$ 100 +" },
     ],
   },
 ]

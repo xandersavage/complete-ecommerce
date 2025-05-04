@@ -233,8 +233,8 @@ const StoreTemplate = ({
                 All Products
               </h1>
               <p className="text-gray-500 mt-1 font-montserrat">
-                Discover our collection of high-quality children's clothing and
-                accessories
+                Discover our collection of high-quality children&#39;s clothing
+                and accessories
               </p>
             </div>
 

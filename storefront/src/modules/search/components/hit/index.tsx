@@ -17,12 +17,14 @@ export type ProductHit = {
 
 type HitProps = {
   hit: ProductHit
+  onClose?: () => void
 }
 
-const Hit = ({ hit }: HitProps) => {
+const Hit = ({ hit, onClose }: HitProps) => {
   return (
     <LocalizedClientLink
       href={`/products/${hit.handle}`}
+      onClick={onClose}
       data-testid="search-result"
     >
       <Container

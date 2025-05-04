@@ -8,7 +8,9 @@ import SideMenu from "@modules/layout/components/side-menu"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CartDropdown from "@modules/layout/components/cart-dropdown"
 import CountrySelect from "@modules/layout/components/country-select"
+import SearchModal from "@modules/search/templates/search-modal"
 import { useToggleState } from "@medusajs/ui"
+import { HttpTypes } from "@medusajs/types"
 import {
   Menu,
   ShoppingBag,
@@ -18,9 +20,15 @@ import {
   Heart,
 } from "lucide-react"
 
-const PawklanNavClient = ({ regions, cart }) => {
+type PawklanNavClientProps = {
+  regions: HttpTypes.StoreRegion[] | null
+  cart: HttpTypes.StoreCart | null
+}
+
+const PawklanNavClient = ({ regions, cart }: PawklanNavClientProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
   const toggleState = useToggleState()
   const cartItemsCount = cart?.items?.length || 0
 
@@ -40,6 +48,14 @@ const PawklanNavClient = ({ regions, cart }) => {
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev)
+  }
+
+  const handleSearch = () => {
+    setIsSearchOpen(true)
+  }
+
+  const closeSearch = () => {
+    setIsSearchOpen(false)
   }
 
   return (
@@ -162,24 +178,17 @@ const PawklanNavClient = ({ regions, cart }) => {
             {/* Right Actions */}
             <div className="flex items-center space-x-4">
               {/* Search */}
-              <LocalizedClientLink
-                href="/search"
+              <button
+                onClick={handleSearch}
                 className="p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-700"
                 aria-label="Search"
               >
                 <Search size={22} />
-              </LocalizedClientLink>
+              </button>
 
               {/* Cart */}
               <div className="relative">
                 <CartDropdown cart={cart} />
-
-                {/* Cart Item Count Badge */}
-                {/* {cartItemsCount > 0 && (
-                  <div className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartItemsCount > 9 ? "9+" : cartItemsCount}
-                  </div>
-                )} */}
               </div>
             </div>
           </nav>
@@ -229,6 +238,9 @@ const PawklanNavClient = ({ regions, cart }) => {
           onClick={toggleMenu}
         />
       )}
+
+      {/* Search Modal */}
+      {isSearchOpen && <SearchModal onClose={closeSearch} />}
     </>
   )
 }

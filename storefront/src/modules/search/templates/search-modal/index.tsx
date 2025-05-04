@@ -8,27 +8,41 @@ import { SEARCH_INDEX_NAME, searchClient } from "@lib/search-client"
 import Hit from "@modules/search/components/hit"
 import Hits from "@modules/search/components/hits"
 import SearchBox from "@modules/search/components/search-box"
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 
-export default function SearchModal() {
+type SearchModalProps = {
+  onClose?: () => void
+}
+
+export default function SearchModal({ onClose }: SearchModalProps = {}) {
   const router = useRouter()
   const searchRef = useRef(null)
 
-  // close modal on outside click
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (event.target === searchRef.current) {
+  // Handle closing modal
+  const handleClose = useCallback(() => {
+    if (onClose) {
+      onClose()
+    } else {
       router.back()
     }
-  }
+  }, [onClose, router])
+
+  // close modal on outside click
+  const handleOutsideClick = useCallback(
+    (event: MouseEvent) => {
+      if (event.target === searchRef.current) {
+        handleClose()
+      }
+    },
+    [handleClose]
+  )
 
   useEffect(() => {
     window.addEventListener("click", handleOutsideClick)
-    // cleanup
     return () => {
       window.removeEventListener("click", handleOutsideClick)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [handleOutsideClick])
 
   // disable scroll on body when modal is open
   useEffect(() => {
@@ -42,17 +56,15 @@ export default function SearchModal() {
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        router.back()
+        handleClose()
       }
     }
     window.addEventListener("keydown", handleEsc)
 
-    // cleanup
     return () => {
       window.removeEventListener("keydown", handleEsc)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [handleClose])
 
   return (
     <div className="relative z-[75]">
@@ -72,7 +84,11 @@ export default function SearchModal() {
                 <SearchBox />
               </div>
               <div className="flex-1 mt-6">
-                <Hits hitComponent={Hit} />
+                <Hits
+                  hitComponent={(props) => (
+                    <Hit {...props} onClose={handleClose} />
+                  )}
+                />
               </div>
             </div>
           </InstantSearch>
